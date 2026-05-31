@@ -33,12 +33,29 @@ contract TaskRegistry {
         string newTitle
     );
 
+    event TaskDeleted(
+        uint256 indexed taskId,
+        address indexed creator
+    );
+
     error EmptyTitle();
     error TaskNotFound();
     error NotTaskCreator();
 
     constructor() {
         owner = msg.sender;
+    }
+
+    function _removeTaskIdFromUser(address user, uint256 taskId) internal {
+        uint256[] storage taskIds = userTaskIds[user];
+
+        for (uint256 i = 0; i < taskIds.length; i++) {
+            if (taskIds[i] == taskId) {
+                taskIds[i] = taskIds[taskIds.length - 1];
+                taskIds.pop();
+                return;
+            }
+        }
     }
 
     function createTask(string calldata title) external returns (uint256 taskId) {
@@ -96,6 +113,24 @@ contract TaskRegistry {
         task.completed = true;
 
         emit TaskCompleted(taskId, msg.sender);
+    }
+
+    function deleteTask(uint256 taskId) external {
+        Task storage task = tasks[taskId];
+
+        if (task.creator == address(0)) {
+            revert TaskNotFound();
+        }
+
+        if (task.creator != msg.sender) {
+            revert NotTaskCreator();
+        }
+
+        _removeTaskIdFromUser(msg.sender, taskId);
+
+        delete tasks[taskId];
+
+        emit TaskDeleted(taskId, msg.sender);
     }
 
     function getTask(uint256 taskId) external view returns (Task memory) {
