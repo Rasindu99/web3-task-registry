@@ -18,12 +18,12 @@ if (!fs.existsSync(deploymentFilePath)) {
 
 const deploymentData = JSON.parse(fs.readFileSync(deploymentFilePath, "utf8"));
 
-const [deployer, userOne] = await ethers.getSigners();
+const [deployer] = await ethers.getSigners();
 
 console.log("Network:", networkName);
 console.log("Contract address:", deploymentData.address);
 console.log("Deployer:", deployer.address);
-console.log("User One:", userOne.address);
+console.log("Deployer balance:", deploymentData.deployerBalance, "ETH");
 console.log("");
 
 const taskRegistry = await ethers.getContractAt(
@@ -99,12 +99,6 @@ console.log(
 console.log("");
 
 console.log("=== Trying Unauthorized Action ===");
-
-try {
-  await taskRegistry.connect(userOne).completeTask(nextTaskIdBefore);
-} catch (error) {
-  console.log("User One failed to complete deployer's task, as expected.");
-}
 
 console.log("");
 console.log("Interaction completed successfully.");

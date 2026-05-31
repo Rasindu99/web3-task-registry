@@ -1,0 +1,8 @@
+{
+  "network": "sepolia",
+  "contractName": "TaskRegistry",
+  "address": "0x42c0f94490e040736DC65e281e8B5ABf814dF2f4",
+  "deployer": "0x1cEF173ecC5fb540067A4F77a0121bE7A3A780Ee",
+  "deployerBalance": "0.05",
+  "deployedAt": "2026-05-31T19:43:01.259Z"
+}
