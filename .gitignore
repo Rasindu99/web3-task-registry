@@ -37,6 +37,10 @@ cache
 coverage
 typechain-types
 
+web3-dapp/node_modules
+web3-dapp/dist
+web3-dapp/.env.local
+
 deployments/localhost.json
 
 .agents/
