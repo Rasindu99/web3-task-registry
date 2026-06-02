@@ -121,8 +121,6 @@ export function TaskList({ refreshKey }: TaskListProps) {
 
     refetchTaskIds();
     refetchTasks();
-    setCompletingTaskId(null);
-    setDeletingTaskId(null);
   }, [isCompleteConfirmed, isDeleteConfirmed, refetchTaskIds, refetchTasks]);
 
   if (!isConnected) {
@@ -167,12 +165,12 @@ export function TaskList({ refreshKey }: TaskListProps) {
   }
 
   const tasks = taskIds?.length
-    ? taskResults
+    ? (taskResults
         ?.filter((result) => result.status === "success")
         .flatMap((result) => {
           const task = asTask(result.result);
           return task ? [task] : [];
-        }) ?? []
+        }) ?? [])
     : [];
 
   return (
@@ -210,11 +208,20 @@ export function TaskList({ refreshKey }: TaskListProps) {
             (isDeletePending || isDeleteConfirming);
 
           return (
-            <article key={task.id.toString()} className="task-item">
-              <div>
+            <article
+              key={task.id.toString()}
+              className={`task-item ${task.completed ? "task-item-complete" : "task-item-pending"}`}
+            >
+              <div className="task-main">
                 <h3>{task.title}</h3>
                 <p className="muted">Task ID: {task.id.toString()}</p>
-                <p className={task.completed ? "success" : "warning"}>
+                <p
+                  className={
+                    task.completed
+                      ? "status-badge success"
+                      : "status-badge warning"
+                  }
+                >
                   {task.completed ? "Completed" : "Pending"}
                 </p>
               </div>
@@ -230,8 +237,8 @@ export function TaskList({ refreshKey }: TaskListProps) {
                       {completingTaskId === task.id && isCompletePending
                         ? "Waiting..."
                         : completingTaskId === task.id && isCompleteConfirming
-                        ? "Confirming..."
-                        : "Complete"}
+                          ? "Confirming..."
+                          : "Complete"}
                     </button>
                   )}
 
@@ -243,8 +250,8 @@ export function TaskList({ refreshKey }: TaskListProps) {
                     {deletingTaskId === task.id && isDeletePending
                       ? "Waiting..."
                       : deletingTaskId === task.id && isDeleteConfirming
-                      ? "Confirming..."
-                      : "Delete"}
+                        ? "Confirming..."
+                        : "Delete"}
                   </button>
                 </div>
               )}
@@ -254,7 +261,7 @@ export function TaskList({ refreshKey }: TaskListProps) {
       </div>
 
       {completeHash && (
-        <p className="muted">
+        <p className="muted hash-line">
           Complete tx hash: <span className="mono">{completeHash}</span>
         </p>
       )}
@@ -262,7 +269,7 @@ export function TaskList({ refreshKey }: TaskListProps) {
       {completeError && <p className="error">{completeError.message}</p>}
 
       {deleteHash && (
-        <p className="muted">
+        <p className="muted hash-line">
           Delete tx hash: <span className="mono">{deleteHash}</span>
         </p>
       )}

@@ -66,13 +66,13 @@ export function CreateTaskForm({ onTaskCreated }: CreateTaskFormProps) {
             {isPending
               ? "Waiting for wallet..."
               : isConfirming
-              ? "Confirming..."
-              : "Create Task"}
+                ? "Confirming..."
+                : "Create Task"}
           </button>
         </form>
 
         {hash && (
-          <p className="muted">
+          <p className="muted hash-line">
             Transaction hash: <span className="mono">{hash}</span>
           </p>
         )}

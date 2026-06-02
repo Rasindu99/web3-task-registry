@@ -17,7 +17,7 @@ export function WalletInfo() {
           <p>
             <strong>Status:</strong> Connected
           </p>
-          <p>
+          <p className="address-line">
             <strong>Address:</strong> {address}
           </p>
           <p>
