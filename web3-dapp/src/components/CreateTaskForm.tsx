@@ -15,6 +15,7 @@ type CreateTaskFormProps = {
 export function CreateTaskForm({ onTaskCreated }: CreateTaskFormProps) {
   const { isConnected } = useAccount();
   const [title, setTitle] = useState("");
+  const [validationMessage, setValidationMessage] = useState("");
 
   const { data: hash, error, isPending, writeContract } = useWriteContract();
 
@@ -35,9 +36,11 @@ export function CreateTaskForm({ onTaskCreated }: CreateTaskFormProps) {
     const cleanedTitle = title.trim();
 
     if (!cleanedTitle) {
-      alert("Task title is required");
+      setValidationMessage("Add a short task description before creating it.");
       return;
     }
+
+    setValidationMessage("");
 
     writeContract({
       address: contracts.taskRegistry,
@@ -49,27 +52,61 @@ export function CreateTaskForm({ onTaskCreated }: CreateTaskFormProps) {
     setTitle("");
   }
 
+  const isFormBusy = isPending || isConfirming;
+  const isSubmitDisabled = !isConnected || isFormBusy;
+  const helperMessage = !isConnected
+    ? "Connect your wallet to create a task."
+    : "Describe one actionable task. Clear titles are easier to track on-chain.";
+
   return (
     <section className="card create-task-card">
       <h2>Create Task</h2>
 
       <div className="create-task-body">
         <form onSubmit={handleSubmit} className="form">
-          <input
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-            placeholder="Example: Learn wagmi contract writes"
-            disabled={!isConnected || isPending || isConfirming}
-          />
+          <div className="field-group">
+            <div className="field-label-row">
+              <label className="field-label" htmlFor="task-title">
+                Task details
+              </label>
+              <span className="field-count mono">{title.trim().length} chars</span>
+            </div>
 
-          <button disabled={!isConnected || isPending || isConfirming}>
-            {isPending
-              ? "Waiting for wallet..."
-              : isConfirming
-                ? "Confirming..."
-                : "Create Task"}
-          </button>
+            <textarea
+              id="task-title"
+              value={title}
+              onChange={(event) => {
+                setTitle(event.target.value);
+                if (validationMessage) {
+                  setValidationMessage("");
+                }
+              }}
+              placeholder="Example: Learn wagmi contract writes and submit a first end-to-end task on Sepolia."
+              className="task-textarea"
+              rows={5}
+              disabled={isSubmitDisabled}
+            />
+
+            <button className="primary-action" disabled={isSubmitDisabled}>
+              <span className="button-title">
+                {isPending
+                  ? "Waiting for wallet..."
+                  : isConfirming
+                    ? "Confirming task..."
+                    : "Create Task"}
+              </span>
+              <span className="button-subtitle">
+                {isConnected
+                  ? "Send this task to the registry"
+                  : "Wallet connection required"}
+              </span>
+            </button>
+
+            <p className="muted field-help">{helperMessage}</p>
+          </div>
         </form>
+
+        {validationMessage && <p className="error">{validationMessage}</p>}
 
         {hash && (
           <p className="muted hash-line">

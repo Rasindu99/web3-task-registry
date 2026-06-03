@@ -81,7 +81,8 @@ body::after {
 }
 
 button,
-input {
+input,
+textarea {
   font: inherit;
 }
 
@@ -119,9 +120,26 @@ input {
   background: rgba(255, 255, 255, 0.9);
 }
 
-input:focus {
+textarea {
+  width: 100%;
+  border: 1px solid rgba(20, 33, 61, 0.16);
+  border-radius: 18px;
+  padding: 14px 16px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.97) 0%, rgba(244, 248, 255, 0.92) 100%);
+  color: var(--ink-0);
+  resize: vertical;
+  min-height: 132px;
+}
+
+input:focus,
+textarea:focus {
   outline: 2px solid rgba(79, 109, 255, 0.25);
   border-color: rgba(79, 109, 255, 0.48);
+}
+
+textarea::placeholder {
+  color: rgba(94, 109, 136, 0.9);
 }
 
 .page {
@@ -286,8 +304,73 @@ input:focus {
 
 .form {
   display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 10px;
+  gap: 14px;
+}
+
+.field-group {
+  display: grid;
+  gap: 12px;
+}
+
+.field-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.field-label {
+  font-size: var(--fs-small);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-1);
+}
+
+.field-count {
+  font-size: var(--fs-small);
+  color: var(--muted);
+}
+
+.task-textarea {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    0 10px 24px rgba(20, 33, 61, 0.06);
+}
+
+.field-help {
+  margin: 0;
+  font-size: var(--fs-small);
+}
+
+.primary-action {
+  width: 100%;
+  min-height: 60px;
+  border-radius: 18px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  text-align: left;
+  box-shadow: 0 14px 26px rgba(20, 33, 61, 0.24);
+}
+
+.button-title,
+.button-subtitle {
+  display: block;
+}
+
+.button-title {
+  font-family: "Outfit", "Segoe UI", sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.button-subtitle {
+  font-size: var(--fs-small);
+  color: rgba(255, 255, 255, 0.76);
 }
 
 .task-list {
@@ -478,8 +561,10 @@ input:focus {
     max-width: 100%;
   }
 
-  .form {
-    grid-template-columns: 1fr;
+  .primary-action {
+    min-height: 72px;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .task-item {
