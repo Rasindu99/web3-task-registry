@@ -16,6 +16,7 @@ export function CreateTaskForm({ onTaskCreated }: CreateTaskFormProps) {
   const { isConnected } = useAccount();
   const [title, setTitle] = useState("");
   const [validationMessage, setValidationMessage] = useState("");
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const { data: hash, error, isPending, writeContract } = useWriteContract();
 
@@ -60,9 +61,31 @@ export function CreateTaskForm({ onTaskCreated }: CreateTaskFormProps) {
 
   return (
     <section className="card create-task-card">
-      <h2>Create Task</h2>
+      <button
+        type="button"
+        className="accordion-trigger"
+        onClick={() => setIsExpanded((current) => !current)}
+        aria-expanded={isExpanded}
+        aria-controls="create-task-panel"
+      >
+        <div className="accordion-copy">
+          <h2>Create Task</h2>
+          <p className="section-intro">
+            Write a concise task title and send it to the registry.
+          </p>
+        </div>
 
-      <div className="create-task-body">
+        <div className="accordion-meta">
+          <span className="accordion-icon" aria-hidden="true">
+            {isExpanded ? "-" : "+"}
+          </span>
+        </div>
+      </button>
+
+      <div
+        id="create-task-panel"
+        className={`create-task-body ${isExpanded ? "create-task-body-open" : "create-task-body-collapsed"}`}
+      >
         <form onSubmit={handleSubmit} className="form">
           <div className="field-group">
             <div className="field-label-row">

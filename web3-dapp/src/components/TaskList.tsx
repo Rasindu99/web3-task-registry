@@ -126,7 +126,12 @@ export function TaskList({ refreshKey }: TaskListProps) {
   if (!isConnected) {
     return (
       <section className="card task-card">
-        <h2>Your Tasks</h2>
+        <div>
+          <h2>Your Tasks</h2>
+          <p className="section-intro">
+            Your created tasks appear here after your wallet is connected.
+          </p>
+        </div>
         <p>Connect your wallet to view your tasks.</p>
       </section>
     );
@@ -176,7 +181,12 @@ export function TaskList({ refreshKey }: TaskListProps) {
   return (
     <section className="card task-card">
       <div className="card-header">
-        <h2>Your Tasks</h2>
+        <div>
+          <h2>Your Tasks</h2>
+          <p className="section-intro">
+            Track status, refresh on-chain data, and manage your items.
+          </p>
+        </div>
         <button
           type="button"
           onClick={() => {
@@ -190,11 +200,17 @@ export function TaskList({ refreshKey }: TaskListProps) {
 
       {isLoadingTaskIds || isLoadingTasks ? <p>Loading tasks...</p> : null}
 
-      {!isLoadingTaskIds && tasks.length === 0 ? (
-        <p>No tasks found for this wallet yet.</p>
-      ) : null}
-
       <div className="task-list">
+        {!isLoadingTaskIds && tasks.length === 0 ? (
+          <div className="empty-state">
+            <p className="empty-state-title">No tasks yet</p>
+            <p className="muted">
+              Create your first task from the panel on the left. It will appear
+              here once the transaction is confirmed.
+            </p>
+          </div>
+        ) : null}
+
         {tasks.map((task) => {
           const addressLower = address?.toLowerCase();
           const isCreator =
