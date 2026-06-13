@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import { useAccount } from "wagmi";
 import { CreateTaskForm } from "./components/CreateTaskForm";
 import { TaskList } from "./components/TaskList";
 import { WalletInfo } from "./components/WalletInfo";
@@ -6,10 +7,16 @@ import { WalletInfo } from "./components/WalletInfo";
 function App() {
   const [refreshKey, setRefreshKey] = useState(0);
   const [isWalletDialogOpen, setIsWalletDialogOpen] = useState(false);
+  const { isConnected } = useAccount();
 
   const refreshTasks = useCallback(() => {
     setRefreshKey((current) => current + 1);
   }, []);
+
+  const walletButtonLabel = isConnected ? "Wallet Connected" : "Connect Wallet";
+  const walletButtonClassName = isConnected
+    ? "wallet-trigger wallet-trigger-connected"
+    : "wallet-trigger wallet-trigger-disconnected";
 
   return (
     <main className="page">
@@ -24,13 +31,12 @@ function App() {
           <div className="hero-meta">
             <span className="hero-pill">Network: Sepolia</span>
             <span className="hero-pill">Smart Contract Tasks</span>
-            <span className="hero-pill">Wallet Ready</span>
             <button
               type="button"
-              className="wallet-trigger"
+              className={walletButtonClassName}
               onClick={() => setIsWalletDialogOpen(true)}
             >
-              Open Wallet
+              {walletButtonLabel}
             </button>
           </div>
         </div>

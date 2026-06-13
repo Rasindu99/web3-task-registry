@@ -22,6 +22,42 @@ type Task = {
   createdAt: bigint;
 };
 
+type ActionIconProps = {
+  kind: "complete" | "trash";
+};
+
+function ActionIcon({ kind }: ActionIconProps) {
+  if (kind === "trash") {
+    return (
+      <svg
+        className="action-icon"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path
+          d="M9 3.75h6l.75 1.5H19.5a.75.75 0 0 1 0 1.5h-.93l-.72 11.02a2.25 2.25 0 0 1-2.24 2.1H8.39a2.25 2.25 0 0 1-2.24-2.1L5.43 6.75H4.5a.75.75 0 0 1 0-1.5h3.75L9 3.75Zm-2.07 3 .72 10.92a.75.75 0 0 0 .74.7h7.22a.75.75 0 0 0 .74-.7l.72-10.92H6.93Zm3.32 2.25c.41 0 .75.34.75.75v5.25a.75.75 0 0 1-1.5 0V9.75c0-.41.34-.75.75-.75Zm3.5 0c.41 0 .75.34.75.75v5.25a.75.75 0 0 1-1.5 0V9.75c0-.41.34-.75.75-.75Z"
+          fill="currentColor"
+        />
+      </svg>
+    );
+  }
+
+  return (
+    <svg
+      className="action-icon"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        d="M12 3a9 9 0 1 1 0 18 9 9 0 0 1 0-18Zm0 1.5a7.5 7.5 0 1 0 0 15 7.5 7.5 0 0 0 0-15Zm3.28 4.97a.75.75 0 0 1 .06 1.06l-3.75 4.2a.75.75 0 0 1-1.08.03l-1.88-1.88a.75.75 0 1 1 1.06-1.06l1.32 1.32 3.22-3.61a.75.75 0 0 1 1.05-.06Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
 export function TaskList({ refreshKey }: TaskListProps) {
   const { address, isConnected } = useAccount();
   const [completingTaskId, setCompletingTaskId] = useState<bigint | null>(null);
@@ -247,27 +283,40 @@ export function TaskList({ refreshKey }: TaskListProps) {
                   {!task.completed && (
                     <button
                       type="button"
+                      className="task-action-button task-action-button-complete"
                       disabled={isCompletingThisTask || isDeletingThisTask}
                       onClick={() => handleCompleteTask(task.id)}
+                      aria-label={
+                        completingTaskId === task.id && isCompletePending
+                          ? "Waiting to complete task"
+                          : completingTaskId === task.id && isCompleteConfirming
+                            ? "Confirming task completion"
+                            : "Complete task"
+                      }
+                      title={
+                        completingTaskId === task.id && isCompletePending
+                          ? "Waiting..."
+                          : completingTaskId === task.id && isCompleteConfirming
+                            ? "Confirming..."
+                            : "Complete task"
+                      }
                     >
-                      {completingTaskId === task.id && isCompletePending
-                        ? "Waiting..."
-                        : completingTaskId === task.id && isCompleteConfirming
-                          ? "Confirming..."
-                          : "Complete"}
+                      <ActionIcon kind="complete" />
                     </button>
                   )}
 
                   <button
                     type="button"
+                    className="task-action-button task-action-button-delete"
                     disabled={isDeletingThisTask || isCompletingThisTask}
                     onClick={() => handleDeleteTask(task.id)}
                   >
+                    <ActionIcon kind="trash" />
                     {deletingTaskId === task.id && isDeletePending
                       ? "Waiting..."
                       : deletingTaskId === task.id && isDeleteConfirming
                         ? "Confirming..."
-                        : "Delete"}
+                        : ""}
                   </button>
                 </div>
               )}

@@ -244,6 +244,16 @@ input::placeholder {
   padding-inline: 1.2rem;
 }
 
+.wallet-trigger-connected {
+  background: linear-gradient(135deg, #0f9f7a 0%, #0a7e61 100%);
+  box-shadow: 0 12px 24px rgba(15, 159, 122, 0.24);
+}
+
+.wallet-trigger-disconnected {
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  box-shadow: 0 12px 24px rgba(180, 83, 9, 0.24);
+}
+
 .app-layout {
   display: grid;
   gap: 24px;
@@ -570,6 +580,29 @@ input::placeholder {
 
 .task-actions button {
   white-space: nowrap;
+}
+
+.task-action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.task-action-button-complete {
+  min-width: 3rem;
+  padding-inline: 0.95rem;
+}
+
+.task-action-button-delete {
+  background: linear-gradient(135deg, #c2410c 0%, #9a3412 100%);
+  box-shadow: 0 12px 24px rgba(154, 52, 18, 0.22);
+}
+
+.action-icon {
+  width: 1.2rem;
+  height: 1.2rem;
+  flex: 0 0 auto;
 }
 
 .muted {
